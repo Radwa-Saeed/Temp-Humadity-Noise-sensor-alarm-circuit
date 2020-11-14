@@ -3,6 +3,9 @@
 #include "DHT.h"
 #define DHTPIN A0     // what pin we're connected to
 #define DHTTYPE DHT11   // we are using the DHT11 sensor
+#define fan 13
+int maxHum = 60;
+int maxTemp = 35;
 int soundSensor = 6; //connecting the sound sensor 
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);  //LiquidCrystal(rs, enable, d4, d5, d6, d7)
 DHT dht(DHTPIN, DHTTYPE);
@@ -14,6 +17,7 @@ void setup()
    {
       pinMode(DigitalPin, OUTPUT);
    }
+  pinMode(fan, OUTPUT); 
   lcd.begin(16,2);  //16 by 2 character display
   dht.begin();
   pinMode (soundSensor, INPUT);
@@ -47,7 +51,7 @@ void loop()
     digitalWrite(9, LOW);
     digitalWrite(10, LOW);
     }
-  else if (t>=35)
+  else if (t>=37)
     {
     digitalWrite(9, LOW);
     digitalWrite(8, LOW);
@@ -59,7 +63,12 @@ void loop()
     digitalWrite(8, LOW);
     digitalWrite(9, HIGH);
     }
-    
+  //******************Fan*********************
+  if(h > maxHum || t > maxTemp) {
+        digitalWrite(fan, HIGH);
+    } else {
+       digitalWrite(fan, LOW); 
+    }    
   // ************ Sound detection ********************* 
   int statusSensor = digitalRead (soundSensor);
     if (statusSensor == 1)
